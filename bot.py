@@ -6,7 +6,7 @@ import settings
 
 conn=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-def connect(HOST, PORT):
+def connect(HOST, PORT, NICK, IDENT, REALNAME, PASS, CHANNEL):
     conn.connect((HOST, PORT))
     conn.send('NICK '+NICK+'\r\n')
     conn.send('USER '+IDENT+' '+HOST+' * :'+REALNAME+'\r\n')
@@ -41,5 +41,5 @@ def listen():
         if data.find('PRIVMSG') != -1:
             parseMessage(data)
 
-connect(HOST, PORT)
+connect(settings.HOST, settings.PORT, settings.NICK, settings.IDENT, settings.REALNAME, settings.PASS, settings.CHANNEL)
 listen()
