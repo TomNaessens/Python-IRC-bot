@@ -38,7 +38,18 @@ modes = { 'owner': '+q', 'o': '+q',
           'dehalfop': '-ho', 'dho': '-ho',
           'voice': '+v', 'v': '+v',
           'devoice': '-v', 'dv': '-v',
+          'ban': '+b', 'b': '+b',
+          'unban': '-b', 'b': '-b',
         }
+
+def changeMode(channel, cmd, user):
+    print 
+    if cmd[0] in modes:
+        if len(cmd) > 1:
+            wie = cmd[1]
+        else:
+            wie = user
+        conn.send('MODE '+channel+' '+modes[cmd[0]]+' '+wie+'\r\n')
 
 def parseMessage(data):
     full = data[1:]
@@ -53,8 +64,16 @@ def parseMessage(data):
 
     if char == '!':
         cmd = msg[1:].split()
-        if user == settings.OWNER:
-                conn.send('MODE '+channel+' '+modes[cmd[0]]+' '+cmd[1]+'\r\n')
+        if user == settings.OWNER: # Op only functions!
+            if cmd[0] in modes:
+                changeMode(channel, cmd, user)
+            
+            if len(cmd) > 1: # We need an argument here!
+                if cmd[0] == 'topic':
+                    conn.send('TOPIC '+channel+' :'+msg[7:]+'\r\n')
+
+                if cmd[0] == 'kick' or cmd[0] == 'k':
+                    conn.send('KICK '+channel+' '+user+'\r\n')
 
 def listen():
     while True:
