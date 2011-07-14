@@ -28,6 +28,18 @@ def initialPing():
             print 'Initial PONG sent'
             break
 
+modes = { 'owner': '+q', 'o': '+q',
+          'deowner': '-q', 'do': '-q',
+          'protected': '+p', 'protect': '+p', 'p': '+p',
+          'deprotected': '-p', 'deprotect': '-p', 'dp': '-p',
+          'operator': '+o', 'op': '+o',
+          'deoperator': '-o', 'deop': '-o', 'dop': '-o',
+          'halfop': '+ho', 'ho': '+ho',
+          'dehalfop': '-ho', 'dho': '-ho',
+          'voice': '+v', 'v': '+v',
+          'devoice': '-v', 'dv': '-v',
+        }
+
 def parseMessage(data):
     full = data[1:]
     info = full.split(':')[0].rstrip()
@@ -42,26 +54,7 @@ def parseMessage(data):
     if char == '!':
         cmd = msg[1:].split()
         if user == settings.OWNER:
-            if cmd[0] == 'owner' or cmd[0] == 'q':
-                conn.send('MODE '+channel+' +q '+cmd[1]+'\r\n')
-            if cmd[0] == 'deowner' or cmd[0] == 'dq':
-                conn.send('MODE '+channel+' -q '+cmd[1]+'\r\n')
-            if cmd[0] == 'protected' or cmd[0] == 'p':
-                conn.send('MODE '+channel+' +p '+cmd[1]+'\r\n')
-            if cmd[0] == 'deprotected' or cmd[0] == 'dp':
-                conn.send('MODE '+channel+' -p '+cmd[1]+'\r\n')
-            if cmd[0] == 'op' or cmd[0] == 'o':
-                conn.send('MODE '+channel+' +o '+cmd[1]+'\r\n')
-            if cmd[0] == 'deop' or cmd[0] == 'do':
-                conn.send('MODE '+channel+' -o '+cmd[1]+'\r\n')
-            if cmd[0] == 'halfop' or cmd[0] == 'ho':
-                conn.send('MODE '+channel+' +h '+cmd[1]+'\r\n')
-            if cmd[0] == 'dehalfop' or cmd[0] == 'dho':
-                conn.send('MODE '+channel+' -h '+cmd[1]+'\r\n')
-            if cmd[0] == 'voice' or cmd[0] == 'v':
-                conn.send('MODE '+channel+' +v '+cmd[1]+'\r\n')
-            if cmd[0] == 'devoice' or cmd[0] == 'dv': 
-                conn.send('MODE '+channel+' -v '+cmd[1]+'\r\n')
+                conn.send('MODE '+channel+' '+modes[cmd[0]]+' '+cmd[1]+'\r\n')
 
 def listen():
     while True:
