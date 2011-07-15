@@ -14,6 +14,7 @@ def connect(HOST, PORT, NICK, IDENT, REALNAME, PASS, CHANNEL):
 
     conn.send('PRIVMSG NickServ IDENTIFY '+PASS+'\r\n')
     conn.send('JOIN '+CHANNEL+'\r\n')
+    conn.send('PRIVMSG '+CHANNEL+' :Quack!\r\n')
 
 def sendPing(ping):
     conn.send('PONG '+ping+'\r\n')
@@ -34,7 +35,7 @@ modes = { 'owner': '+q', 'o': '+q',
           'deprotected': '-p', 'deprotect': '-p', 'dp': '-p',
           'operator': '+o', 'op': '+o',
           'deoperator': '-o', 'deop': '-o', 'dop': '-o',
-          'halfop': '+ho', 'ho': '+ho',
+          'halfop': '+ho', 'hop': '+ho', 'ho': '+ho',
           'dehalfop': '-ho', 'dho': '-ho',
           'voice': '+v', 'v': '+v',
           'devoice': '-v', 'dv': '-v',
@@ -59,12 +60,12 @@ def parseMessage(data):
     channel = info.split()[2]
     char = msg[:1]
 
-    if msg.strip() == "Ohai, "+settings.NICK+"!":
-        conn.send('PRIVMSG '+channel+' : Ohai, '+user+'!\r\n')
+    if msg.find('Quack') != -1:
+        conn.send('PRIVMSG '+channel+' : Quack, '+user+'!\r\n')
 
     if char == '!':
         cmd = msg[1:].split()
-        if user == settings.OWNER: # Op only functions!
+        if user == settings.irc_OWNER: # Op only functions!
             if cmd[0] in modes:
                 changeMode(channel, cmd, user)
             
@@ -75,14 +76,14 @@ def parseMessage(data):
                 if cmd[0] == 'kick' or cmd[0] == 'k':
                     conn.send('KICK '+channel+' '+user+'\r\n')
 
-def listen():
+def listen(channel):
     while True:
         data = conn.recv(4096)
         print data
         if data.split()[0] == 'PING':
             sendPing(data.split()[1])
-        if data.find('PRIVMSG '+settings.CHANNEL) != -1:
+        if data.find('PRIVMSG '+channel) != -1:
             parseMessage(data)
 
-connect(settings.HOST, settings.PORT, settings.NICK, settings.IDENT, settings.REALNAME, settings.PASS, settings.CHANNEL)
-listen()
+connect(settings.irc_HOST, settings.irc_PORT, settings.irc_NICK, settings.irc_IDENT, settings.irc_REALNAME, settings.irc_PASS, settings.irc_CHANNEL)
+listen(settings.irc_CHANNEL)
