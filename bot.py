@@ -1,7 +1,11 @@
 import sys
 import socket
 import string
+import quote
 import settings
+import kick
+import utils
+import privmsg
 
 conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -52,29 +56,35 @@ def changeMode(channel, cmd, user):
             wie = user
         conn.send('MODE '+channel+' '+modes[cmd[0]]+' '+wie+'\r\n')
 
+msg = privmsg.PrivMSG(':Null!Null NULL null:null')
+
+actions = {'kick': kick.kick,
+           'k': kick.kick,
+           'topic': topic.topic,
+           't': topic.topic
+        }
+
 def parseMessage(data):
-    full = data[1:]
-    info = full.split(':')[0].rstrip()
-    msg = full.split(':')[1]
-    user = info.split('!')[0]
-    channel = info.split()[2]
-    char = msg[:1]
 
-    if msg.find('Quack') != -1:
-        conn.send('PRIVMSG '+channel+' : Quack, '+user+'!\r\n')
+    msg = privmsg.PrivMSG(data)
 
-    if char == '!':
-        cmd = msg[1:].split()
-        if user == settings.irc_OWNER: # Op only functions!
-            if cmd[0] in modes:
-                changeMode(channel, cmd, user)
+    if msg.text.find('Quack') != -1:
+        conn.send('PRIVMSG '+msg.channel+' : Quack, '+msg.user+'!\r\n')
+
+    if msg.char == '!':
+        if msg.user == settings.irc_OWNER: # Op only functions!
+            if msg.cmd[0] in modes:
+                changeMode(msg.channel, msg.cmd, msg.user)
             
-            if len(cmd) > 1: # We need an argument here!
-                if cmd[0] == 'topic':
-                    conn.send('TOPIC '+channel+' :'+msg[7:]+'\r\n')
+            if len(msg.cmd) > 1: # We need an argument here!
+                if msg.cmd[0] == 'topic':
+                    conn.send('TOPIC '+msg.channel+' :'+msg.text[7:]+'\r\n')
 
-                if cmd[0] == 'kick' or cmd[0] == 'k':
-                    conn.send('KICK '+channel+' '+user+'\r\n')
+            if msg.cmd[0] in actions:
+                actions[msg.cmd[0]](conn, msg)
+
+        if msg.cmd[0] == 'addquote' and len(msg.cmd) > 1:
+            quote.addquote(msg.text[len('addquote')+2:])
 
 def listen(channel):
     while True:
