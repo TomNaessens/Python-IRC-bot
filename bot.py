@@ -1,13 +1,12 @@
 import sys
 import socket
 import string
-import quote
+
 import settings
-import kick
-import utils
 import privmsg
 
-conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+from handlers import * 
+
 
 def connect(HOST, PORT, NICK, IDENT, REALNAME, PASS, CHANNEL):
     conn.connect((HOST, PORT))
@@ -56,12 +55,14 @@ def changeMode(channel, cmd, user):
             wie = user
         conn.send('MODE '+channel+' '+modes[cmd[0]]+' '+wie+'\r\n')
 
-msg = privmsg.PrivMSG(':Null!Null NULL null:null')
-
 actions = {'kick': kick.kick,
            'k': kick.kick,
            'topic': topic.topic,
-           't': topic.topic
+           't': topic.topic,
+           'addquote': quote.addquote,
+           'quote': quote.quote,
+           'delquote': quote.delquote,
+           'tell': tell.tell
         }
 
 def parseMessage(data):
@@ -72,19 +73,11 @@ def parseMessage(data):
         conn.send('PRIVMSG '+msg.channel+' : Quack, '+msg.user+'!\r\n')
 
     if msg.char == '!':
-        if msg.user == settings.irc_OWNER: # Op only functions!
-            if msg.cmd[0] in modes:
-                changeMode(msg.channel, msg.cmd, msg.user)
+        if msg.cmd[0] in modes:
+            changeMode(msg.channel, msg.cmd, msg.user)
             
-            if len(msg.cmd) > 1: # We need an argument here!
-                if msg.cmd[0] == 'topic':
-                    conn.send('TOPIC '+msg.channel+' :'+msg.text[7:]+'\r\n')
-
-            if msg.cmd[0] in actions:
-                actions[msg.cmd[0]](conn, msg)
-
-        if msg.cmd[0] == 'addquote' and len(msg.cmd) > 1:
-            quote.addquote(msg.text[len('addquote')+2:])
+        elif msg.cmd[0] in actions:
+            actions[msg.cmd[0]](conn, msg)
 
 def listen(channel):
     while True:
@@ -95,5 +88,6 @@ def listen(channel):
         if data.find('PRIVMSG '+channel) != -1:
             parseMessage(data)
 
+conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 connect(settings.irc_HOST, settings.irc_PORT, settings.irc_NICK, settings.irc_IDENT, settings.irc_REALNAME, settings.irc_PASS, settings.irc_CHANNEL)
 listen(settings.irc_CHANNEL)
