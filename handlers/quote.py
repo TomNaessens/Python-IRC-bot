@@ -25,6 +25,5 @@ def quote(conn, msg):
         
     else:
         rows, count = mysql.get('SELECT * FROM irc_quote WHERE quote LIKE %s ORDER BY RAND()', ("%"+parts[1]+"%"))
-    
     if count != 0:
-        conn.send('PRIVMSG %s :Quote %i: %s\r\n' % (msg.channel, rows[0], rows[1]))
+        conn.send('PRIVMSG %s :Quote %i: %s\r\n' % (msg.channel, rows[0][0], rows[0][1]))

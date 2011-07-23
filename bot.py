@@ -68,6 +68,8 @@ actions = {'kick': kick.kick,
 def parseMessage(data):
 
     msg = privmsg.PrivMSG(data)
+    
+    tell.active(conn, msg)
 
     if msg.text.find('Quack') != -1:
         conn.send('PRIVMSG '+msg.channel+' : Quack, '+msg.user+'!\r\n')

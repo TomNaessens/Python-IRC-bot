@@ -49,13 +49,12 @@ def get(query, args):
         
         cursor = conn.cursor()
 
-        print args
         if len(args) == 0:
             cursor.execute(query)
         else:
             cursor.execute(query, args)
  
-        rows = cursor.fetchone()
+        rows = cursor.fetchall()
         count = cursor.rowcount
 
         cursor.close()
