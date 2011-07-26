@@ -14,6 +14,19 @@ def assign(conn, msg):
         usage = 'Gebruik: !assign woord definitie'
         conn.send('PRIVMSG %s :%s\r\n' % (msg.user, usage))
 
+def unassign(conn, msg):
+    if msg.user == settings.irc_OWNER:
+        if len(msg.text.split()) > 1:
+            word = msg.text.split()[1]
+            rowid = mysql.set('DELETE FROM irc_assign WHERE word=%s', (word))
+            conn.send('PRIVMSG %s :%s unassigned.\r\n' % (msg.channel, word))
+        else:
+            usage = 'Gebruik: !unassign woord'
+            conn.send('PRIVMSG %s :%s\r\n' % (msg.user, usage))
+    else:
+        usage = 'Je moet een operator zijn om dit commando te kunnen gebruiken.'
+        conn.send('PRIVMSG %s :%s\r\n' % (msg.user, usage))
+
 def lijst(conn, msg):
     aantal = 10
     if len(msg.text.split()) > 1:
