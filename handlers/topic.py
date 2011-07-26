@@ -3,9 +3,10 @@ sys.path.append("../")
 
 import mysql
 import settings
+import utils
 
 def topic(conn, msg):
-    if msg.user == settings.irc_OWNER:
+    if msg.user == settings.irc_OWNER or utils.isadmin(conn, msg):
         if len(msg.text.split()) > 1:
             topic = ' '.join(msg.text.split()[1:])
             conn.send('TOPIC %s :%s\r\n' % (msg.channel, topic))

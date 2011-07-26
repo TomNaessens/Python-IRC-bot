@@ -1,7 +1,8 @@
 import settings
+import utils
 
 def kick(conn, msg):
-    if msg.user == settings.irc_OWNER:
+    if msg.user == settings.irc_OWNER or utils.isadmin(conn, msg):
         if len(msg.text.split()) == 2:
             conn.send('KICK '+msg.channel+' '+msg.text.split()[1]+'\r\n')
         elif len(msg.text.split()) > 2:

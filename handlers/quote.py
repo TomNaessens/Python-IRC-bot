@@ -3,6 +3,7 @@ sys.path.append("../")
 
 import mysql
 import settings
+import utils
 
 def addquote(conn, msg):
     if len(msg.text.split()) > 1:
@@ -14,7 +15,7 @@ def addquote(conn, msg):
         conn.send('PRIVMSG %s :%s\r\n' % (msg.user, usage))
 
 def delquote(conn, msg):
-    if msg.user == settings.irc_OWNER:
+    if msg.user == settings.irc_OWNER or utils.isadmin(conn, msg):
         if len(msg.text.split()) > 1 and msg.text.split()[1].isdigit():
             rowid = mysql.set('DELETE FROM irc_quote WHERE id=%s', msg.text.split()[1])
             conn.send('PRIVMSG %s :Quote %i deleted!\r\n' % (msg.channel, int(msg.text.split()[1])))

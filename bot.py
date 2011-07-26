@@ -4,6 +4,7 @@ import sys
 import socket
 import string
 
+import utils
 import settings
 import privmsg
 
@@ -48,13 +49,16 @@ modes = { 'owner': '+q', 'o': '+q',
           'unban': '-b', 'b': '-b',
         }
 
-def changeMode(channel, cmd, user):
-    if cmd[0] in modes:
-        if len(cmd) > 1:
-            wie = cmd[1]
+def changeMode(conn, msg):
+    if utils.isadmin(conn, msg):
+        cmd = msg.text.split()[0][1:]
+        if len(msg.text.split()) > 1:
+            wie = msg.text.split()[1]
         else:
-            wie = user
-        conn.send('MODE '+channel+' '+modes[cmd[0]]+' '+wie+'\r\n')
+            wie = msg.user
+        conn.send('MODE %s %s %s\r\n' % (msg.channel, modes[cmd], wie))
+    else:
+        conn.send('PRIVMSG %s :Je moet een operator zijn om dit commando te kunnen uitvoeren.\r\n' % msg.user)
 
 actions = {'kick': kick.kick,
            'k': kick.kick,
@@ -72,15 +76,15 @@ actions = {'kick': kick.kick,
 def parseMessage(data):
 
     msg = privmsg.PrivMSG(data)
-    
+
     tell.active(conn, msg)
 
     if msg.text.find('Quack') != -1:
-        conn.send('PRIVMSG '+msg.channel+' : Quack, '+msg.user+'!\r\n')
+        conn.send('PRIVMSG %s :Quack, %s!\r\n' % (msg.channel, msg.user))
 
     if msg.char == '!':
         if msg.cmd[0] in modes:
-            changeMode(msg.channel, msg.cmd, msg.user)
+            changeMode(conn, msg)
             
         elif msg.cmd[0] in actions:
             actions[msg.cmd[0]](conn, msg)

@@ -8,3 +8,11 @@ def parse(data):
     cmd = text[1:].split()
 
     return full, info, text, user, channel, char, cmd
+
+def isadmin(conn, msg):
+    conn.send('WHOIS %s\r\n' % msg.user)
+    
+    data = conn.recv(4096)
+    char = data[data.find(msg.channel)-1]
+
+    return char == '~' or char == '@'
