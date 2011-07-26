@@ -11,6 +11,9 @@ def tell(conn, msg):
 
         rowid = mysql.set("INSERT INTO irc_tell (`from`, `to`, `message`) VALUES (%s, %s, %s)", (frm, to, message))
         conn.send('PRIVMSG %s :I will tell %s that when %s is here.\r\n' % (msg.channel, to, to))
+    else:
+        usage = 'Gebruik: !tell naam tekst'
+        conn.send('PRIVMSG %s :%s\r\n' % (msg.user, usage))
 
 def active(conn, msg):
     rows, count = mysql.get('SELECT * FROM irc_tell WHERE `to`=%s', (msg.user))

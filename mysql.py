@@ -14,6 +14,14 @@ import sys
 #         `id` INT( 5 ) NOT NULL AUTO_INCREMENT PRIMARY KEY ,
 #         `quote` TEXT NOT NULL
 #    ) ENGINE = MYISAM ;
+#
+#CREATE TABLE  `ircbot`.`irc_assign` (
+#        `id` INT( 5 ) NOT NULL AUTO_INCREMENT ,
+#        `word` VARCHAR( 30 ) NOT NULL ,
+#        `def` TEXT NOT NULL ,
+#        PRIMARY KEY (  `id` ) ,
+#        INDEX (  `id` )
+#        ) ENGINE = MYISAM ;
 
 # Shorter names are shorter
 HOST = settings.sql_HOST

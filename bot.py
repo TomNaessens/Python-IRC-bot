@@ -1,3 +1,5 @@
+#!/usr/bin/python -O
+
 import sys
 import socket
 import string
@@ -47,7 +49,6 @@ modes = { 'owner': '+q', 'o': '+q',
         }
 
 def changeMode(channel, cmd, user):
-    print 
     if cmd[0] in modes:
         if len(cmd) > 1:
             wie = cmd[1]
@@ -62,7 +63,9 @@ actions = {'kick': kick.kick,
            'addquote': quote.addquote,
            'quote': quote.quote,
            'delquote': quote.delquote,
-           'tell': tell.tell
+           'tell': tell.tell,
+           'assign': definitions.assign,
+           'list': definitions.lijst
         }
 
 def parseMessage(data):
@@ -80,6 +83,9 @@ def parseMessage(data):
             
         elif msg.cmd[0] in actions:
             actions[msg.cmd[0]](conn, msg)
+    
+    elif msg.char == '?':
+            definitions.explain(conn, msg)
 
 def listen(channel):
     while True:

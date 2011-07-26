@@ -1,2 +1,17 @@
+import sys
+sys.path.append("../")
+
+import mysql
+import settings
+
 def topic(conn, msg):
-    conn.send('TOPIC '+msg.channel+' :'+msg.text[7:]+'\r\n')
+    if msg.user == settings.irc_OWNER:
+        if len(msg.text.split()) > 1:
+            topic = ' '.join(msg.text.split()[1:])
+            conn.send('TOPIC %s :%s\r\n' % (msg.channel, topic))
+        else:
+            usage = 'Gebruik: !topic topic'
+            conn.send('PRIVMSG %s :%s\r\n' % (msg.user, usage))
+    else:
+        usage = 'Je moet een operator zijn om dit commando te kunnen gebruiken.'
+        conn.send('PRIVMSG %s :%s\r\n' % (msg.user, usage))

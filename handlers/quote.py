@@ -9,11 +9,22 @@ def addquote(conn, msg):
         quote = ' '.join(msg.text.split()[1:])
         rowid = mysql.set('INSERT INTO irc_quote (quote) VALUES (%s)', (quote))
         conn.send('PRIVMSG %s :Quote %i added!\r\n' % (msg.channel, rowid))
+    else:
+        usage = 'Gebruik: !addquote quote'
+        conn.send('PRIVMSG %s :%s\r\n' % (msg.user, usage))
 
 def delquote(conn, msg):
-    if len(msg.text.split()) > 1 and msg.text.split()[1].isdigit() and msg.user == settings.irc_OWNER:
-        rowid = mysql.set('DELETE FROM irc_quote WHERE id=%s', msg.text.split()[1])
-        conn.send('PRIVMSG %s :Quote %i deleted!\r\n' % (msg.channel, int(msg.text.split()[1])))
+    if msg.user == settings.irc_OWNER:
+        if len(msg.text.split()) > 1 and msg.text.split()[1].isdigit():
+            rowid = mysql.set('DELETE FROM irc_quote WHERE id=%s', msg.text.split()[1])
+            conn.send('PRIVMSG %s :Quote %i deleted!\r\n' % (msg.channel, int(msg.text.split()[1])))
+        else:
+            usage = 'Gebruik: !delquote id'
+            conn.send('PRIVMSG %s :%s\r\n' % (msg.user, usage))
+    else:
+        usage = 'Je moet een operator zijn om dit commando te kunnen gebruiken.'
+        conn.send('PRIVMSG %s :%s\r\n' % (msg.user, usage))
+
 
 def quote(conn, msg):
     parts = msg.text.split()
