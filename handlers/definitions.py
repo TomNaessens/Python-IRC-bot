@@ -37,7 +37,7 @@ def reassign(conn, msg):
                 conn.send('PRIVMSG %s :%s is not defined yet. Use !assign word def to assign it.\r\n' % (msg.channel, word))
             else:
                 rowid = mysql.set('UPDATE irc_assign SET def=%s WHERE word=%s', (defin, word))
-                conn.send('PRIVMSG %s :%s reassigned to:%s\r\n' % (msg.channel, word, defin))
+                conn.send('PRIVMSG %s :%s reassigned to: %s\r\n' % (msg.channel, word, defin))
         else:
             usage = 'Gebruik: !reassign woord definitie'
             conn.send('PRIVMSG %s :%s\r\n' % (msg.user, usage))
