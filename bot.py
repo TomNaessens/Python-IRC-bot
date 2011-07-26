@@ -69,6 +69,7 @@ actions = {'kick': kick.kick,
            'delquote': quote.delquote,
            'tell': tell.tell,
            'assign': definitions.assign,
+           'reassign': definitions.reassign,
            'unassign': definitions.unassign,
            'list': definitions.lijst
         }
