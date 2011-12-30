@@ -71,7 +71,9 @@ actions = {'kick': kick.kick,
            'assign': definitions.assign,
            'reassign': definitions.reassign,
            'unassign': definitions.unassign,
-           'list': definitions.lijst
+           'list': definitions.lijst,
+           'dt': dt.dt,
+           'dtlijst': dt.lijst
         }
 
 def parseMessage(data):
