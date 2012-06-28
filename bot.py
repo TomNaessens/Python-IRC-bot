@@ -29,6 +29,7 @@ def sendPing(ping):
 def initialPing():
     while True:
         data = conn.recv(4096)
+        data = data.strip()
         print data
         if data.split()[0] == 'PING':
             sendPing(data.split()[1])
@@ -73,7 +74,8 @@ actions = {'kick': kick.kick,
            'unassign': definitions.unassign,
            'list': definitions.lijst,
            'dt': dt.dt,
-           'dtlijst': dt.lijst
+           'dtlijst': dt.lijst,
+           'oa': onzinalarm.alarm
         }
 
 def parseMessage(data):
@@ -99,10 +101,11 @@ def listen(channel):
     while True:
         data = conn.recv(4096)
         print data
-        if data.split()[0] == 'PING':
-            sendPing(data.split()[1])
-        if data.find('PRIVMSG '+channel) != -1:
-            parseMessage(data)
+        if data != '':
+            if data.split()[0] == 'PING':
+                sendPing(data.split()[1])
+            if data.find('PRIVMSG '+channel) != -1:
+                parseMessage(data)
 
 conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 connect(settings.irc_HOST, settings.irc_PORT, settings.irc_NICK, settings.irc_IDENT, settings.irc_REALNAME, settings.irc_PASS, settings.irc_CHANNEL)
