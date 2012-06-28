@@ -75,7 +75,8 @@ actions = {'kick': kick.kick,
            'list': definitions.lijst,
            'dt': dt.dt,
            'dtlijst': dt.lijst,
-           'oa': onzinalarm.alarm
+           'oa': onzinalarm.alarm,
+           'help': help.help
         }
 
 def parseMessage(data):
