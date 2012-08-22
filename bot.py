@@ -102,11 +102,15 @@ def listen(channel):
     while True:
         data = conn.recv(4096)
         print data
-        if data != '':
+        if len(data) > 0:
             if data.split()[0] == 'PING':
                 sendPing(data.split()[1])
             if data.find('PRIVMSG '+channel) != -1:
                 parseMessage(data)
+        else:
+            conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            connect(settings.irc_HOST, settings.irc_PORT, settings.irc_NICK, settings.irc_IDENT, settings.irc_REALNAME, settings.irc_PASS, settings.irc_CHANNEL)
+            listen(settings.irc_CHANNEL)
 
 conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 connect(settings.irc_HOST, settings.irc_PORT, settings.irc_NICK, settings.irc_IDENT, settings.irc_REALNAME, settings.irc_PASS, settings.irc_CHANNEL)
