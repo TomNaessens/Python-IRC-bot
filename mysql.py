@@ -35,10 +35,10 @@ def set(query, args):
 
     try:
         conn = sql.connect(HOST, USER, PASS, DB, PORT)
-        
+
         cursor = conn.cursor()
         cursor.execute(query, args)
-        
+
         rowid = cursor.lastrowid
 
         conn.commit()
@@ -46,7 +46,7 @@ def set(query, args):
         cursor.close()
         conn.close()
     except sql.Error, e:
-        print 'Error %d: %s' % (e.args[0], e.args[1]) 
+        print 'Error %d: %s' % (e.args[0], e.args[1])
     return rowid
 
 def get(query, args):
@@ -54,20 +54,20 @@ def get(query, args):
     count = 0
     try:
         conn = sql.connect(HOST, USER, PASS, DB, PORT)
-        
+
         cursor = conn.cursor()
 
         if len(args) == 0:
             cursor.execute(query)
         else:
             cursor.execute(query, args)
- 
+
         rows = cursor.fetchall()
         count = cursor.rowcount
 
         cursor.close()
         conn.close()
     except sql.Error, e:
-        print 'Error %d: %s' % (e.args[0], e.args[1]) 
+        print 'Error %d: %s' % (e.args[0], e.args[1])
 
     return rows, count

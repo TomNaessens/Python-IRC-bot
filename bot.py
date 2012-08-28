@@ -8,7 +8,7 @@ import utils
 import settings
 import privmsg
 
-from handlers import * 
+from handlers import *
 
 
 def connect(HOST, PORT, NICK, IDENT, REALNAME, PASS, CHANNEL):
@@ -91,10 +91,10 @@ def parseMessage(data):
     if msg.char == '!':
         if msg.cmd[0] in modes:
             changeMode(conn, msg)
-            
+
         elif msg.cmd[0] in actions:
             actions[msg.cmd[0]](conn, msg)
-    
+
     elif msg.char == '?':
             definitions.explain(conn, msg)
 
