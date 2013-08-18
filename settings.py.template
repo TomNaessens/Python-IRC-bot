@@ -1,0 +1,12 @@
+# IRC settings
+irc_HOST = ''
+irc_PORT = 6667
+irc_OWNER = ''
+irc_NICK = ''
+irc_PASS = ''
+irc_IDENT = ''
+irc_REALNAME = ''
+irc_CHANNEL = ''
+
+# SQL settings
+sql_DB = 'database.db'
