@@ -96,7 +96,7 @@ def parseMessage(data):
             actions[msg.cmd[0]](conn, msg)
 
     elif msg.char == '?':
-            definitions.explain(conn, msg)
+        definitions.explain(conn, msg)
 
 def listen(channel, conn):
     while True:

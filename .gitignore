@@ -1,1 +1,3 @@
 Backups/
+*.pyc
+database.db

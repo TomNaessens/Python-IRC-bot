@@ -1,7 +1,7 @@
 import sys
 sys.path.append("../")
 
-import mysql
+import sqlite
 import settings
 import utils
 
