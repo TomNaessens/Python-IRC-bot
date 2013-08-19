@@ -9,24 +9,24 @@ def dt(conn, msg):
     if len(msg.text.split()) > 2:
         naam = msg.text.split()[1]
         error = ' '.join(msg.text.split()[2:])
-        rowid = sqlite.set('INSERT INTO irc_dt (name, error) VALUES (%s, %s)', (naam, error,))
+        rowid = sqlite.set('INSERT INTO irc_dt (name, error) VALUES (?, ?)', (naam, error,))
         conn.send('PRIVMSG %s :DT-fout %i added!\r\n' % (msg.channel, rowid))
     else:
         parts = msg.text.split()
         if len(parts) == 1:
-            rows, count = sqlite.get('SELECT * FROM irc_dt ORDER BY RAND()', ())
+            rows, count = sqlite.get('SELECT * FROM irc_dt ORDER BY RANDOM()', ())
 
             if count != 0:
                 conn.send('PRIVMSG %s :DT-fout %i: [%s] %s\r\n' % (msg.channel, rows[0][0], rows[0][1], rows[0][2]))
 
         elif parts[1].isdigit():
-            rows, count = sqlite.get('SELECT * FROM irc_dt WHERE id=%s', (parts[1],))
+            rows, count = sqlite.get('SELECT * FROM irc_dt WHERE id=?', (parts[1],))
 
             if count != 0:
                 conn.send('PRIVMSG %s :DT-fout %i: [%s] %s\r\n' % (msg.channel, rows[0][0], rows[0][1], rows[0][2]))
 
         else:
-            rows, count = sqlite.get('SELECT * FROM irc_dt WHERE name=%s ORDER BY RAND()', (parts[1],))
+            rows, count = sqlite.get('SELECT * FROM irc_dt WHERE name=? ORDER BY RANDOM()', (parts[1],))
 
             if count != 0:
                 conn.send('PRIVMSG %s :DT-fout: %s heeft in totaal al %i DT-fouten gemaakt\r\n' % (msg.channel, rows[0][1], count))
