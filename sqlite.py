@@ -39,7 +39,7 @@ def get(query, args):
             cursor.execute(query, args)
 
         rows = cursor.fetchall()
-        count = cursor.rowcount
+        count = len(rows)
 
         cursor.close()
         conn.close()
