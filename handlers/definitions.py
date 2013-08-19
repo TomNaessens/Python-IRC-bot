@@ -58,7 +58,7 @@ def unassign(conn, msg):
         usage = 'Je moet een operator zijn om dit commando te kunnen gebruiken.'
         conn.send('PRIVMSG %s :%s\r\n' % (msg.user, usage))
 
-def lijst(conn, msg):
+def list(conn, msg):
     aantal = 10
     if len(msg.text.split()) > 1:
         getal = msg.text.split()[1]

@@ -16,3 +16,9 @@ CREATE TABLE `irc_assign` (
   `word` VARCHAR(30) NOT NULL,
   `def` TEXT NOT NULL
 );
+
+CREATE TABLE `irc_dt` (
+  `id` INTEGER PRIMARY KEY NOT NULL,
+  `name` VARCHAR(30) NOT NULL,
+  `error` TEXT NOT NULL
+);

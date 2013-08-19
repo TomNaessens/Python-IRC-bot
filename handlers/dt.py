@@ -35,7 +35,7 @@ def dt(conn, msg):
 
 
 
-def lijst(conn, msg):
+def list(conn, msg):
 
     aantal = 5
     if len(msg.text.split()) > 1:

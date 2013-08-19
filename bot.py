@@ -72,9 +72,9 @@ actions = {'kick': kick.kick,
            'assign': definitions.assign,
            'reassign': definitions.reassign,
            'unassign': definitions.unassign,
-           'list': definitions.lijst,
+           'list': definitions.list,
            'dt': dt.dt,
-           'dtlijst': dt.lijst,
+           'dtlist': dt.list,
            'oa': onzinalarm.alarm,
            'help': help.help
         }
