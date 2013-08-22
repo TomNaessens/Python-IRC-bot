@@ -85,7 +85,7 @@ def parseMessage(data):
 
     tell.active(conn, msg)
 
-    if msg.text.find('Quack') != -1:
+    if "Quack" in msg.text:
         conn.send('PRIVMSG %s :Quack, %s!\r\n' % (msg.channel, msg.user))
 
     if msg.char == '!':
@@ -99,19 +99,19 @@ def parseMessage(data):
         definitions.explain(conn, msg)
 
 def listen(channel, conn):
+    buffer = ""
+
     while True:
-        data = conn.recv(4096)
-        print data
-        if len(data) > 0:
-            if data.split()[0] == 'PING':
-                sendPing(data.split()[1])
-            if data.find('PRIVMSG '+channel) != -1:
-                parseMessage(data)
-        else:
-            conn.close()
-            conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            connect(settings.irc_HOST, settings.irc_PORT, settings.irc_NICK, settings.irc_IDENT, settings.irc_REALNAME, settings.irc_PASS, settings.irc_CHANNEL)
-            listen(settings.irc_CHANNEL)
+        buffer = buffer + conn.recv(4096)
+        datas = buffer.split("\r\n")
+        buffer = datas.pop()
+        for data in datas:
+            print data
+            if len(data) > 0:
+                if data.split()[0] == 'PING':
+                    sendPing(data.split()[1])
+                if "PRIVMSG " + channel in data:
+                    parseMessage(data)
 
 conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 connect(settings.irc_HOST, settings.irc_PORT, settings.irc_NICK, settings.irc_IDENT, settings.irc_REALNAME, settings.irc_PASS, settings.irc_CHANNEL)
