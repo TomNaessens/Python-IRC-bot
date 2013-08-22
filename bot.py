@@ -27,12 +27,10 @@ def sendPing(ping):
     print 'PONG'
 
 def initialPing():
-    while True:
-        data = conn.recv(4096)
-        data = data.strip()
-        print data
-        if data.split()[0] == 'PING':
-            sendPing(data.split()[1])
+    for line in conn.makefile('r'):
+        print line
+        if line.split()[0] == 'PING':
+            sendPing(line.split()[1])
             print 'Initial PONG sent'
             break
 
@@ -99,19 +97,13 @@ def parseMessage(data):
         definitions.explain(conn, msg)
 
 def listen(channel, conn):
-    buffer = ""
-
-    while True:
-        buffer = buffer + conn.recv(4096)
-        datas = buffer.split("\r\n")
-        buffer = datas.pop()
-        for data in datas:
-            print data
-            if len(data) > 0:
-                if data.split()[0] == 'PING':
-                    sendPing(data.split()[1])
-                if "PRIVMSG " + channel in data:
-                    parseMessage(data)
+    for line in conn.makefile('r'):
+        if len(line) > 0:
+            print line
+            if line.split()[0] == 'PING':
+                sendPing(line.split()[1])
+            if "PRIVMSG " + channel in line:
+                parseMessage(line)
 
 conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 connect(settings.irc_HOST, settings.irc_PORT, settings.irc_NICK, settings.irc_IDENT, settings.irc_REALNAME, settings.irc_PASS, settings.irc_CHANNEL)
