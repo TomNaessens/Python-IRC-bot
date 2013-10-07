@@ -9,7 +9,7 @@ def tell(conn, msg):
         to = msg.text.split()[1]
         frm = msg.user
 
-        rowid = sqlite.set("INSERT INTO irc_tell (`from`, `to`, `message`) VALUES (?, ?, ?)", (frm, to, message))
+        rowid = sqlite.set("INSERT INTO irc_tell (`user`, `to`, `message`) VALUES (?, ?, ?)", (frm, to, message))
         conn.send('PRIVMSG %s :I will tell %s that when %s is here.\r\n' % (msg.channel, to, to))
     else:
         usage = 'Gebruik: !tell naam tekst'
